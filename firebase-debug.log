@@ -1,0 +1,215 @@
+[debug] [2026-04-30T12:02:36.572Z] ----------------------------------------------------------------------
+[debug] [2026-04-30T12:02:36.574Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\mhmdh\who-am-i\who-am-i\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2026-04-30T12:02:36.574Z] CLI Version:   15.15.0
+[debug] [2026-04-30T12:02:36.575Z] Platform:      win32
+[debug] [2026-04-30T12:02:36.575Z] Node Version:  v24.13.1
+[debug] [2026-04-30T12:02:36.575Z] Time:          Thu Apr 30 2026 15:02:36 GMT+0300 (Israel Daylight Time)
+[debug] [2026-04-30T12:02:36.575Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-04-30T12:02:37.656Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-04-30T12:02:37.657Z] > authorizing via signed-in user (mhmd.hjere.98@gmail.com)
+[debug] [2026-04-30T12:02:37.657Z] [iam] checking project who-am-i-f7237 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-04-30T12:02:37.657Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:37.658Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:37.658Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions [none]
+[debug] [2026-04-30T12:02:37.658Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions  x-goog-user-project=who-am-i-f7237
+[debug] [2026-04-30T12:02:37.658Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-30T12:02:38.633Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions 200
+[debug] [2026-04-30T12:02:38.633Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-30T12:02:38.634Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:38.634Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:38.634Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/who-am-i-f7237 [none]
+[debug] [2026-04-30T12:02:38.938Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/who-am-i-f7237 200
+[debug] [2026-04-30T12:02:38.938Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/who-am-i-f7237 {"projectId":"who-am-i-f7237","projectNumber":"81740772391","displayName":"who-am-i","name":"projects/who-am-i-f7237","resources":{"hostingSite":"who-am-i-f7237"},"state":"ACTIVE","etag":"1_776bb457-7305-49b9-942f-138c77455034"}
+[debug] [2026-04-30T12:02:40.550Z] defaultcredentials: writing to file C:\Users\mhmdh\AppData\Roaming\firebase\mhmd_hjere.98_gmail.com_application_default_credentials.json
+[debug] [2026-04-30T12:02:40.554Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:40.554Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:40.554Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites pageToken=&pageSize=10
+[debug] [2026-04-30T12:02:42.235Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites 200
+[debug] [2026-04-30T12:02:42.235Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites {"sites":[{"name":"projects/who-am-i-f7237/sites/who-am-i-f7237","defaultUrl":"https://who-am-i-f7237.web.app","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","type":"DEFAULT_SITE"}]}
+[debug] [2026-04-30T12:02:42.235Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:42.236Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:42.236Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:81740772391:web:66a9ac6caeae868e2d4a02/config [none]
+[debug] [2026-04-30T12:02:43.255Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:81740772391:web:66a9ac6caeae868e2d4a02/config 200
+[debug] [2026-04-30T12:02:43.256Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:81740772391:web:66a9ac6caeae868e2d4a02/config {"projectId":"who-am-i-f7237","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","storageBucket":"who-am-i-f7237.firebasestorage.app","apiKey":"AIzaSyBOJbYMtslCfa0BzO6_fUA5BOqOrdtlNBE","authDomain":"who-am-i-f7237.firebaseapp.com","messagingSenderId":"81740772391","measurementId":"G-MZZKSWSS28","projectNumber":"81740772391","version":"2"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2026-04-30T12:02:47.298Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:47.298Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:02:47.298Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 [none]
+[debug] [2026-04-30T12:02:48.661Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 200
+[debug] [2026-04-30T12:02:48.661Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 {"name":"projects/who-am-i-f7237/sites/who-am-i-f7237","defaultUrl":"https://who-am-i-f7237.web.app","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","type":"DEFAULT_SITE"}
+[info] ▲ Next.js 16.2.4 (Turbopack)
+
+[info] - Environments: .env.local
+
+
+[info]   Creating an optimized production build ...
+
+[info] ✓ Compiled successfully in 2.3s
+
+[info]   Running TypeScript ...
+
+[info]   Finished TypeScript in 2.2s ...
+
+[info]   Collecting page data using 11 workers ...
+
+[info]   Generating static pages using 11 workers (0/11) ...
+
+[info]   Generating static pages using 11 workers (2/11) 
+
+[info]   Generating static pages using 11 workers (5/11) 
+
+[info]   Generating static pages using 11 workers (8/11) 
+
+[info] ✓ Generating static pages using 11 workers (11/11) in 522ms
+
+[info]   Finalizing page optimization ...
+
+[info] 
+
+[info] Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ƒ /api/admin/end-game
+├ ƒ /api/admin/reset
+├ ○ /guess
+├ ○ /questions
+├ ○ /results
+└ ○ /waiting
+
+
+[info] 
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+[info] Building a Cloud Function to run this application. This is needed due to:
+[info]  • non-static component /api/admin/end-game/route
+[info]  • non-static component /api/admin/reset/route
+[info] 
+[debug] [2026-04-30T12:03:04.292Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:03:04.292Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:03:04.292Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 [none]
+[debug] [2026-04-30T12:03:05.633Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 200
+[debug] [2026-04-30T12:03:05.633Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 {"name":"projects/who-am-i-f7237/sites/who-am-i-f7237","defaultUrl":"https://who-am-i-f7237.web.app","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","type":"DEFAULT_SITE"}
+[debug] [2026-04-30T12:03:06.527Z] Error: EPERM: operation not permitted, symlink 'C:\Users\mhmdh\who-am-i\who-am-i\node_modules\firebase-admin' -> 'C:\Users\mhmdh\who-am-i\who-am-i\.firebase\who-am-i-f7237\functions\.next\node_modules\firebase-admin-a14c8a5423a75469'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-04-30T12:04:34.820Z] ----------------------------------------------------------------------
+[debug] [2026-04-30T12:04:34.822Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\mhmdh\who-am-i\who-am-i\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2026-04-30T12:04:34.822Z] CLI Version:   15.15.0
+[debug] [2026-04-30T12:04:34.822Z] Platform:      win32
+[debug] [2026-04-30T12:04:34.822Z] Node Version:  v24.13.1
+[debug] [2026-04-30T12:04:34.822Z] Time:          Thu Apr 30 2026 15:04:34 GMT+0300 (Israel Daylight Time)
+[debug] [2026-04-30T12:04:34.822Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-04-30T12:04:35.910Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-04-30T12:04:35.911Z] > authorizing via signed-in user (mhmd.hjere.98@gmail.com)
+[debug] [2026-04-30T12:04:35.911Z] [iam] checking project who-am-i-f7237 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-04-30T12:04:35.912Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:35.912Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:35.912Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions [none]
+[debug] [2026-04-30T12:04:35.912Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions  x-goog-user-project=who-am-i-f7237
+[debug] [2026-04-30T12:04:35.912Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-30T12:04:36.892Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions 200
+[debug] [2026-04-30T12:04:36.892Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/who-am-i-f7237:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-30T12:04:36.893Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:36.893Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:36.893Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/who-am-i-f7237 [none]
+[debug] [2026-04-30T12:04:37.254Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/who-am-i-f7237 200
+[debug] [2026-04-30T12:04:37.254Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/who-am-i-f7237 {"projectId":"who-am-i-f7237","projectNumber":"81740772391","displayName":"who-am-i","name":"projects/who-am-i-f7237","resources":{"hostingSite":"who-am-i-f7237"},"state":"ACTIVE","etag":"1_776bb457-7305-49b9-942f-138c77455034"}
+[debug] [2026-04-30T12:04:38.866Z] defaultcredentials: writing to file C:\Users\mhmdh\AppData\Roaming\firebase\mhmd_hjere.98_gmail.com_application_default_credentials.json
+[debug] [2026-04-30T12:04:38.867Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:38.867Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:38.867Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites pageToken=&pageSize=10
+[debug] [2026-04-30T12:04:40.389Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites 200
+[debug] [2026-04-30T12:04:40.389Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites {"sites":[{"name":"projects/who-am-i-f7237/sites/who-am-i-f7237","defaultUrl":"https://who-am-i-f7237.web.app","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","type":"DEFAULT_SITE"}]}
+[debug] [2026-04-30T12:04:40.389Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:40.389Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:40.389Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:81740772391:web:66a9ac6caeae868e2d4a02/config [none]
+[debug] [2026-04-30T12:04:40.968Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:81740772391:web:66a9ac6caeae868e2d4a02/config 200
+[debug] [2026-04-30T12:04:40.969Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:81740772391:web:66a9ac6caeae868e2d4a02/config {"projectId":"who-am-i-f7237","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","storageBucket":"who-am-i-f7237.firebasestorage.app","apiKey":"AIzaSyBOJbYMtslCfa0BzO6_fUA5BOqOrdtlNBE","authDomain":"who-am-i-f7237.firebaseapp.com","messagingSenderId":"81740772391","measurementId":"G-MZZKSWSS28","projectNumber":"81740772391","version":"2"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2026-04-30T12:04:45.062Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:45.063Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:45.063Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 [none]
+[debug] [2026-04-30T12:04:46.169Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 200
+[debug] [2026-04-30T12:04:46.169Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 {"name":"projects/who-am-i-f7237/sites/who-am-i-f7237","defaultUrl":"https://who-am-i-f7237.web.app","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","type":"DEFAULT_SITE"}
+[info] ▲ Next.js 16.2.4 (Turbopack)
+
+[info] - Environments: .env.local
+
+
+[info]   Creating an optimized production build ...
+
+[info] ✓ Compiled successfully in 2.3s
+
+[info]   Running TypeScript ...
+
+[info]   Finished TypeScript in 2.3s ...
+
+[info]   Collecting page data using 11 workers ...
+
+[info]   Generating static pages using 11 workers (0/11) ...
+
+[info]   Generating static pages using 11 workers (2/11) 
+
+[info]   Generating static pages using 11 workers (5/11) 
+
+[info]   Generating static pages using 11 workers (8/11) 
+
+[info] ✓ Generating static pages using 11 workers (11/11) in 526ms
+
+[info]   Finalizing page optimization ...
+
+[info] 
+
+[info] Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ƒ /api/admin/end-game
+├ ƒ /api/admin/reset
+├ ○ /guess
+├ ○ /questions
+├ ○ /results
+└ ○ /waiting
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+[info] Building a Cloud Function to run this application. This is needed due to:
+[info]  • non-static component /api/admin/end-game/route
+[info]  • non-static component /api/admin/reset/route
+[info] 
+[debug] [2026-04-30T12:04:57.886Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:57.886Z] Checked if tokens are valid: true, expires at: 1777554094166
+[debug] [2026-04-30T12:04:57.886Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 [none]
+[debug] [2026-04-30T12:04:59.194Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 200
+[debug] [2026-04-30T12:04:59.194Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/who-am-i-f7237/sites/who-am-i-f7237 {"name":"projects/who-am-i-f7237/sites/who-am-i-f7237","defaultUrl":"https://who-am-i-f7237.web.app","appId":"1:81740772391:web:66a9ac6caeae868e2d4a02","type":"DEFAULT_SITE"}
+[debug] [2026-04-30T12:05:00.032Z] Error: EPERM: operation not permitted, symlink 'C:\Users\mhmdh\who-am-i\who-am-i\node_modules\firebase-admin' -> 'C:\Users\mhmdh\who-am-i\who-am-i\.firebase\who-am-i-f7237\functions\.next\node_modules\firebase-admin-a14c8a5423a75469'
+[error] 
+[error] Error: An unexpected error has occurred.
