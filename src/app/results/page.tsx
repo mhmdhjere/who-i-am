@@ -46,6 +46,17 @@ export default function ResultsPage() {
       .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   }, [players]);
 
+  const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
+  const myDoc = useMemo(() => (player ? byId.get(player.id) : null), [byId, player]);
+  const questions = game?.questions ?? [];
+
+  const revealOrder = useMemo(() => {
+    const allIds = players.map((p) => p.id);
+    const order = (game?.playerOrder?.length ? game.playerOrder : allIds).slice();
+    const me = player?.id;
+    return me ? order.filter((id) => id !== me) : order;
+  }, [game?.playerOrder, players, player?.id]);
+
   return (
     <>
       <TopBar
@@ -129,6 +140,103 @@ export default function ResultsPage() {
             </Button>
           </div>
         </Card>
+
+        {player && myDoc ? (
+          <>
+            <div style={{ height: 14 }} />
+            <Card className="stack">
+              <div style={{ fontWeight: 780, fontSize: 16 }}>تفاصيل نتيجتك</div>
+              <div className="muted">
+                نتيجتك: <b>{myDoc.score ?? 0}</b> / {guessesPerPlayer}
+              </div>
+
+              <details>
+                <summary style={{ cursor: "pointer", fontWeight: 750 }}>
+                  إجاباتك
+                </summary>
+                <div style={{ height: 10 }} />
+                <div className="stack" style={{ gap: 10 }}>
+                  {(myDoc.answers ?? []).map((a, i) => (
+                    <div key={i} className="cardSoft stack" style={{ gap: 6 }}>
+                      <div className="muted">{questions[i] ?? `سؤال ${i + 1}`}</div>
+                      <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{a}</div>
+                    </div>
+                  ))}
+                </div>
+              </details>
+
+              <details>
+                <summary style={{ cursor: "pointer", fontWeight: 750 }}>
+                  تخميناتك (مع الإجابة الصحيحة)
+                </summary>
+                <div style={{ height: 10 }} />
+                <div className="stack" style={{ gap: 12 }}>
+                  {revealOrder.map((ownerId, idx) => {
+                    const owner = byId.get(ownerId);
+                    if (!owner) return null;
+                    const guessedId = myDoc.guesses?.[ownerId] ?? "";
+                    const guessedName = guessedId ? byId.get(guessedId)?.name : "";
+                    const correctName = owner.name;
+                    const isCorrect = guessedId === ownerId;
+
+                    return (
+                      <div key={ownerId} className="stack">
+                        <div
+                          className="row"
+                          style={{ justifyContent: "space-between", gap: 10 }}
+                        >
+                          <span className="pill">الملف {idx + 1}</span>
+                          <span
+                            className="pill"
+                            style={{
+                              background: isCorrect
+                                ? "color-mix(in srgb, var(--success) 20%, var(--surface))"
+                                : "color-mix(in srgb, var(--danger) 14%, var(--surface))",
+                              borderColor: isCorrect
+                                ? "color-mix(in srgb, var(--success) 45%, var(--border))"
+                                : "color-mix(in srgb, var(--danger) 45%, var(--border))",
+                              color: isCorrect
+                                ? "color-mix(in srgb, var(--success) 70%, var(--text))"
+                                : "color-mix(in srgb, var(--danger) 70%, var(--text))",
+                            }}
+                          >
+                            {isCorrect ? "صحيح" : "خطأ"}
+                          </span>
+                        </div>
+
+                        <div className="cardSoft stack" style={{ gap: 8 }}>
+                          <div className="row" style={{ justifyContent: "space-between" }}>
+                            <div className="muted">تخمينك</div>
+                            <div style={{ fontWeight: 750 }}>
+                              {guessedName || "—"}
+                            </div>
+                          </div>
+                          <div className="row" style={{ justifyContent: "space-between" }}>
+                            <div className="muted">الإجابة الصحيحة</div>
+                            <div style={{ fontWeight: 750 }}>{correctName}</div>
+                          </div>
+                        </div>
+
+                        <div className="stack" style={{ gap: 10 }}>
+                          {(owner.answers ?? []).map((ans, qi) => (
+                            <div key={qi} className="cardSoft stack" style={{ gap: 6 }}>
+                              <div className="muted">
+                                {questions[qi] ?? `سؤال ${qi + 1}`}
+                              </div>
+                              <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+                                {ans}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </details>
+            </Card>
+          </>
+        ) : null}
       </div>
     </>
   );
