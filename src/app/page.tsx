@@ -12,8 +12,9 @@ import { Field, TextInput } from "@/components/ui/Field";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { registerPlayer } from "@/lib/gameStore";
 import { useGame } from "@/lib/useGame";
-import { PLAYER_COUNT } from "@/lib/config";
 import { ar } from "@/lib/i18n";
+import { DEFAULT_PLAYER_COUNT } from "@/lib/config";
+import { getPlayerCount } from "@/lib/gameStore";
 
 export default function RegistrationPage() {
   const router = useRouter();
@@ -22,12 +23,14 @@ export default function RegistrationPage() {
   const [submitting, setSubmitting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
+  const playerCount = getPlayerCount(game);
+
   const canRegister = useMemo(() => {
     if (!game) return false;
     if (game.phase !== "registration") return false;
-    if (game.registeredCount >= PLAYER_COUNT) return false;
+    if (game.registeredCount >= playerCount) return false;
     return true;
-  }, [game, PLAYER_COUNT]);
+  }, [game, playerCount]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -49,7 +52,7 @@ export default function RegistrationPage() {
       <TopBar
         right={
           <span className="pill">
-            {ar.registration.joinedPill(game?.registeredCount ?? 0)}
+            {ar.registration.joinedPill(game?.registeredCount ?? 0, playerCount)}
           </span>
         }
       />
@@ -58,7 +61,7 @@ export default function RegistrationPage() {
 
         <div className="stack" style={{ gap: 10, marginTop: 10 }}>
           <div className="pageTitle">{ar.registration.title}</div>
-          <div className="pageSubtitle">{ar.registration.subtitle}</div>
+          <div className="pageSubtitle">{ar.registration.subtitle(playerCount)}</div>
         </div>
 
         <div style={{ height: 18 }} />
@@ -66,10 +69,12 @@ export default function RegistrationPage() {
         <Card className="stack">
           <ProgressBar
             value={
-              game ? (PLAYER_COUNT ? game.registeredCount / PLAYER_COUNT : 0) : 0
+              game ? (playerCount ? game.registeredCount / playerCount : 0) : 0
             }
             label={
-              game ? ar.registration.progressLabel(game.registeredCount) : ar.common.loading
+              game
+                ? ar.registration.progressLabel(game.registeredCount, playerCount)
+                : ar.common.loading
             }
           />
 

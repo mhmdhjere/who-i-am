@@ -11,7 +11,6 @@ import { SpinnerDots } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
 import { useGame } from "@/lib/useGame";
 import { phaseToPath } from "@/lib/routing";
-import { GUESSES_PER_PLAYER } from "@/lib/config";
 import { ar } from "@/lib/i18n";
 
 export default function WaitingPage() {
@@ -29,8 +28,12 @@ export default function WaitingPage() {
       return;
     }
     if (game.phase === "guessing") {
+      const guessesPerPlayer =
+        typeof game.playerCount === "number" && Number.isFinite(game.playerCount)
+          ? Math.max(1, Math.round(game.playerCount) - 1)
+          : 15;
       const done =
-        !!player && Object.keys(player.guesses ?? {}).length === GUESSES_PER_PLAYER;
+        !!player && Object.keys(player.guesses ?? {}).length === guessesPerPlayer;
       if (!done) router.replace("/guess");
       return;
     }

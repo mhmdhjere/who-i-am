@@ -6,12 +6,14 @@ import { useEffect, useMemo, useState } from "react";
 import { listPlayersOrdered } from "@/lib/gameStore";
 import { useGame } from "@/lib/useGame";
 import type { PlayerDoc } from "@/lib/types";
-import { GUESSES_PER_PLAYER, PLAYER_COUNT } from "@/lib/config";
 import { TopBar } from "@/components/TopBar";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Field, TextInput } from "@/components/ui/Field";
 import { ar } from "@/lib/i18n";
+import { MAX_PLAYER_COUNT, MIN_PLAYER_COUNT } from "@/lib/config";
+import { doc, updateDoc } from "firebase/firestore";
+import { getClientDb } from "@/lib/firebaseClient";
 
 async function postAdmin(path: string, secret: string) {
   const res = await fetch(path, {
@@ -35,6 +37,7 @@ export default function AdminPage() {
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState<null | "end" | "reset">(null);
   const [error, setError] = useState<string | null>(null);
+  const [playerCountInput, setPlayerCountInput] = useState<string>("");
 
   useEffect(() => {
     const s = localStorage.getItem("adminSecret");
@@ -45,6 +48,12 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
+    if (typeof game?.playerCount === "number") {
+      setPlayerCountInput(String(game.playerCount));
+    }
+  }, [game?.playerCount]);
+
+  useEffect(() => {
     setLoadingPlayers(true);
     listPlayersOrdered()
       .then(setPlayers)
@@ -53,16 +62,42 @@ export default function AdminPage() {
   }, [game?.updatedAtMs]);
 
   const qCount = game?.questions?.length ?? 0;
+  const playerCount =
+    typeof game?.playerCount === "number" && Number.isFinite(game.playerCount)
+      ? Math.max(MIN_PLAYER_COUNT, Math.min(MAX_PLAYER_COUNT, Math.round(game.playerCount)))
+      : MAX_PLAYER_COUNT;
+  const guessesPerPlayer = playerCount - 1;
   const stats = useMemo(() => {
     const registered = players.length;
     const answered = players.filter((p) => (p.answers?.length ?? 0) === qCount && qCount > 0)
       .length;
     const guessed = players.filter(
-      (p) => Object.keys(p.guesses ?? {}).length === GUESSES_PER_PLAYER
+      (p) => Object.keys(p.guesses ?? {}).length === guessesPerPlayer
     ).length;
     const scored = players.filter((p) => typeof p.score === "number").length;
     return { registered, answered, guessed, scored };
-  }, [players, qCount, PLAYER_COUNT, GUESSES_PER_PLAYER]);
+  }, [players, qCount, guessesPerPlayer]);
+
+  async function savePlayerCount() {
+    const raw = Number(playerCountInput);
+    const next = Number.isFinite(raw) ? Math.round(raw) : NaN;
+    if (!Number.isFinite(next)) {
+      setError("الرجاء إدخال رقم صحيح لعدد اللاعبين");
+      return;
+    }
+    if (next < MIN_PLAYER_COUNT || next > MAX_PLAYER_COUNT) {
+      setError(`عدد اللاعبين يجب أن يكون بين ${MIN_PLAYER_COUNT} و ${MAX_PLAYER_COUNT}`);
+      return;
+    }
+    try {
+      setError(null);
+      // Update game doc directly from client (MVP rules allow it).
+      const ref = doc(getClientDb(), "games", "current");
+      await updateDoc(ref, { playerCount: next, updatedAtMs: Date.now() });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "تعذر حفظ عدد اللاعبين");
+    }
+  }
 
   function saveSecret() {
     localStorage.setItem("adminSecret", secret);
@@ -136,13 +171,14 @@ export default function AdminPage() {
           <Card className="stack">
             <div style={{ fontWeight: 750, fontSize: 16 }}>{ar.admin.status}</div>
             <div className="stack" style={{ gap: 10 }}>
-              <StatRow label={ar.admin.registered} value={`${stats.registered}/${PLAYER_COUNT}`} />
-              <StatRow label={ar.admin.answered} value={`${stats.answered}/${PLAYER_COUNT}`} />
+              <StatRow label={ar.admin.playerCount} value={`${playerCount}`} />
+              <StatRow label={ar.admin.registered} value={`${stats.registered}/${playerCount}`} />
+              <StatRow label={ar.admin.answered} value={`${stats.answered}/${playerCount}`} />
               <StatRow
                 label={ar.admin.submittedGuesses}
-                value={`${stats.guessed}/${PLAYER_COUNT}`}
+                value={`${stats.guessed}/${playerCount}`}
               />
-              <StatRow label={ar.admin.scored} value={`${stats.scored}/${PLAYER_COUNT}`} />
+              <StatRow label={ar.admin.scored} value={`${stats.scored}/${playerCount}`} />
               <div className="muted">{loadingPlayers ? ar.admin.refreshing : ""}</div>
             </div>
           </Card>
@@ -153,6 +189,22 @@ export default function AdminPage() {
         <Card className="stack">
           <div style={{ fontWeight: 750, fontSize: 16 }}>{ar.admin.controls}</div>
           <div className="muted">{ar.admin.controlsSub}</div>
+          <Field
+            label={ar.admin.playerCount}
+            hint={`بين ${MIN_PLAYER_COUNT} و ${MAX_PLAYER_COUNT}`}
+          >
+            <div className="row">
+              <TextInput
+                value={playerCountInput}
+                onChange={(e) => setPlayerCountInput(e.target.value)}
+                inputMode="numeric"
+                placeholder={`${playerCount}`}
+              />
+              <Button type="button" variant="primary" onClick={savePlayerCount}>
+                حفظ
+              </Button>
+            </div>
+          </Field>
           <div className="row" style={{ flexWrap: "wrap" }}>
             <Button
               variant="danger"
@@ -196,11 +248,11 @@ export default function AdminPage() {
                   <div style={{ fontWeight: 750 }}>{p.name}</div>
                   <div className="muted">
                     {(p.answers?.length ?? 0)}/{qCount} {ar.admin.answers} •{" "}
-                    {Object.keys(p.guesses ?? {}).length}/{GUESSES_PER_PLAYER} {ar.admin.guesses}
+                    {Object.keys(p.guesses ?? {}).length}/{guessesPerPlayer} {ar.admin.guesses}
                   </div>
                 </div>
                 <div className="muted">
-                  {typeof p.score === "number" ? `${p.score}/${GUESSES_PER_PLAYER}` : "—"}
+                  {typeof p.score === "number" ? `${p.score}/${guessesPerPlayer}` : "—"}
                 </div>
               </div>
             ))}

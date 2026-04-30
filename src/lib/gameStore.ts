@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { getClientDb } from "./firebaseClient";
 import type { GameDoc, GamePhase, PlayerDoc } from "./types";
-import { GUESSES_PER_PLAYER, PLAYER_COUNT } from "./config";
+import { DEFAULT_PLAYER_COUNT, MAX_PLAYER_COUNT, MIN_PLAYER_COUNT } from "./config";
 import { DEFAULT_QUESTIONS_AR } from "./questions";
 
 export const GAME_ID = "current";
@@ -27,6 +27,13 @@ export const playerRef = (playerId: string) =>
 
 export const DEFAULT_QUESTIONS: string[] = DEFAULT_QUESTIONS_AR;
 
+export function getPlayerCount(game: Pick<GameDoc, "playerCount"> | null | undefined) {
+  const n = game?.playerCount;
+  if (typeof n !== "number") return DEFAULT_PLAYER_COUNT;
+  if (!Number.isFinite(n)) return DEFAULT_PLAYER_COUNT;
+  return Math.max(MIN_PLAYER_COUNT, Math.min(MAX_PLAYER_COUNT, Math.round(n)));
+}
+
 export async function ensureGameDoc() {
   const ref = gameRef();
   const snap = await getDoc(ref);
@@ -35,6 +42,7 @@ export async function ensureGameDoc() {
     const initial: GameDoc = {
       phase: "registration",
       questions: DEFAULT_QUESTIONS,
+      playerCount: DEFAULT_PLAYER_COUNT,
       registeredCount: 0,
       registeredNamesLower: [],
       playerOrder: [],
@@ -51,6 +59,7 @@ export async function ensureGameDoc() {
     patch.questions = DEFAULT_QUESTIONS;
   }
   if (!data.phase) patch.phase = "registration";
+  if (typeof data.playerCount !== "number") patch.playerCount = DEFAULT_PLAYER_COUNT;
   if (typeof data.registeredCount !== "number") patch.registeredCount = 0;
   if (!Array.isArray(data.registeredNamesLower)) patch.registeredNamesLower = [];
   if (!Array.isArray(data.playerOrder)) patch.playerOrder = [];
@@ -106,14 +115,15 @@ export async function registerPlayer(params: {
     if (game.phase !== "registration")
       throw new Error("Registration is closed");
 
+    const playerCount = getPlayerCount(game);
     const normalized = trimmed.toLowerCase();
     const registeredCount = typeof game.registeredCount === "number" ? game.registeredCount : 0;
     const namesLower = Array.isArray(game.registeredNamesLower)
       ? game.registeredNamesLower
       : [];
 
-    if (registeredCount >= PLAYER_COUNT)
-      throw new Error(`Game is full (${PLAYER_COUNT} players)`);
+    if (registeredCount >= playerCount)
+      throw new Error(`Game is full (${playerCount} players)`);
     if (namesLower.includes(normalized)) throw new Error("Name must be unique");
 
     const pRef = playerRef(playerId);
@@ -136,7 +146,7 @@ export async function registerPlayer(params: {
       tx.update(gRef, {
         registeredCount: newCount,
         registeredNamesLower: newNames,
-        phase: (newCount >= PLAYER_COUNT
+        phase: (newCount >= playerCount
           ? "questions"
           : "registration") satisfies GamePhase,
         updatedAtMs: Date.now(),
@@ -171,13 +181,14 @@ export async function maybeAdvanceToGuessing() {
   if (!gSnap.exists()) return;
   const g = gSnap.data() as GameDoc;
   if (g.phase !== "questions") return;
-  if (g.registeredCount !== PLAYER_COUNT) return;
+  const playerCount = getPlayerCount(g);
+  if (g.registeredCount !== playerCount) return;
 
   const players = await listPlayersOrdered();
   const qCount = Array.isArray(g.questions) ? g.questions.length : 0;
   const allAnswered =
     qCount > 0 &&
-    players.length === PLAYER_COUNT &&
+    players.length === playerCount &&
     players.every((p) => Array.isArray(p.answers) && p.answers.length === qCount);
   if (!allAnswered) return;
 
@@ -204,10 +215,12 @@ export async function maybeAdvanceToWaiting() {
   if (!gSnap.exists()) return;
   const g = gSnap.data() as GameDoc;
   if (g.phase !== "guessing") return;
+  const playerCount = getPlayerCount(g);
+  const guessesPerPlayer = playerCount - 1;
   const players = await listPlayersOrdered();
-  if (players.length !== PLAYER_COUNT) return;
+  if (players.length !== playerCount) return;
   const allSubmitted = players.every(
-    (p) => Object.keys(p.guesses ?? {}).length === GUESSES_PER_PLAYER
+    (p) => Object.keys(p.guesses ?? {}).length === guessesPerPlayer
   );
   if (!allSubmitted) return;
   const db = getClientDb();

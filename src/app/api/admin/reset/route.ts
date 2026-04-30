@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebaseAdmin";
 import { DEFAULT_QUESTIONS_AR } from "@/lib/questions";
+import { DEFAULT_PLAYER_COUNT } from "@/lib/config";
 
 export async function POST(req: Request) {
   const secret = req.headers.get("x-admin-secret") ?? "";
@@ -27,6 +28,7 @@ export async function POST(req: Request) {
     {
       phase: "registration",
       questions: DEFAULT_QUESTIONS_AR,
+      playerCount: DEFAULT_PLAYER_COUNT,
       registeredCount: 0,
       registeredNamesLower: [],
       playerOrder: [],

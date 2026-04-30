@@ -8,6 +8,7 @@ export type GamePhase =
 export type GameDoc = {
   phase: GamePhase;
   questions: string[];
+  playerCount: number; // target number of players (e.g., 16)
   /**
    * Cached registration state so registration can be enforced atomically.
    * (Firestore transactions can't read an entire collection.)

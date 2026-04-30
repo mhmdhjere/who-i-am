@@ -12,12 +12,15 @@ import { listPlayersOrdered } from "@/lib/gameStore";
 import { useGame } from "@/lib/useGame";
 import type { PlayerDoc } from "@/lib/types";
 import { phaseToPath } from "@/lib/routing";
-import { GUESSES_PER_PLAYER } from "@/lib/config";
 import { ar } from "@/lib/i18n";
 
 export default function ResultsPage() {
   const router = useRouter();
   const { game, player, ready } = useGame();
+  const guessesPerPlayer =
+    typeof game?.playerCount === "number" && Number.isFinite(game.playerCount)
+      ? Math.max(1, Math.round(game.playerCount) - 1)
+      : 15;
   const [players, setPlayers] = useState<PlayerDoc[]>([]);
   const [loadingPlayers, setLoadingPlayers] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -62,7 +65,7 @@ export default function ResultsPage() {
         <div className="stack" style={{ gap: 10, marginTop: 10 }}>
           <div className="pageTitle">{ar.results.title}</div>
           <div className="pageSubtitle">
-            {ar.results.subtitle(GUESSES_PER_PLAYER, loadingPlayers)}
+            {ar.results.subtitle(guessesPerPlayer, loadingPlayers)}
           </div>
         </div>
 
@@ -110,7 +113,7 @@ export default function ResultsPage() {
                   </div>
 
                   <div style={{ fontVariantNumeric: "tabular-nums", fontWeight: 750 }}>
-                    {(p.score ?? 0)}/{GUESSES_PER_PLAYER}
+                    {(p.score ?? 0)}/{guessesPerPlayer}
                   </div>
                 </div>
               );

@@ -1,5 +1,3 @@
-import { PLAYER_COUNT } from "./config";
-
 export const ar = {
   appName: "من أنا؟",
 
@@ -14,16 +12,17 @@ export const ar = {
   },
 
   registration: {
-    joinedPill: (count: number) => `المشاركون: ${count} / ${PLAYER_COUNT}`,
+    joinedPill: (count: number, total: number) => `المشاركون: ${count} / ${total}`,
     title: "انضم إلى اللعبة",
-    subtitle: `اختر اسمًا فريدًا. عند اكتمال ${PLAYER_COUNT} مشاركين تبدأ اللعبة تلقائيًا.`,
-    progressLabel: (count: number) => `تم الانضمام: ${count} من ${PLAYER_COUNT}`,
+    subtitle: (total: number) =>
+      `اختر اسمًا فريدًا. عند اكتمال ${total} مشاركين تبدأ اللعبة تلقائيًا.`,
+    progressLabel: (count: number, total: number) => `تم الانضمام: ${count} من ${total}`,
     youAreIn: "تم تسجيلك بنجاح",
     registeredAs: (name: string) => `تم التسجيل باسم ${name}. اترك هذه الصفحة مفتوحة.`,
     continue: "متابعة",
     yourName: "اسمك",
     uniqueName: "اسم فريد",
-    namePlaceholder: "مثال: سارة",
+    namePlaceholder: "مثال: محمد",
     enter: "دخول",
     entering: "جارٍ الدخول…",
     gameFull: "اللعبة ممتلئة.",
@@ -106,6 +105,7 @@ export const ar = {
     secretPlaceholder: "ضع ADMIN_SECRET في .env.local",
     saveSecret: "حفظ الرمز",
     status: "الحالة",
+    playerCount: "عدد اللاعبين",
     registered: "المسجلون",
     answered: "أجابوا",
     submittedGuesses: "أرسلوا التخمينات",

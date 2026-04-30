@@ -18,7 +18,6 @@ import {
 import { useGame } from "@/lib/useGame";
 import type { PlayerDoc } from "@/lib/types";
 import { phaseToPath } from "@/lib/routing";
-import { GUESSES_PER_PLAYER } from "@/lib/config";
 import { ar } from "@/lib/i18n";
 
 type GuessMap = Record<string, string>;
@@ -64,6 +63,12 @@ export default function GuessPage() {
     if (!game?.playerOrder || !user) return [];
     return game.playerOrder.filter((id) => id !== user.uid);
   }, [game?.playerOrder, user]);
+  const guessesPerPlayer = useMemo(() => {
+    const n = game?.playerCount;
+    if (typeof n !== "number" || !Number.isFinite(n)) return 15;
+    return Math.max(1, Math.round(n) - 1);
+  }, [game?.playerCount]);
+
 
   const answerOwners = useMemo(() => {
     const byId = new Map(players.map((p) => [p.id, p]));
@@ -90,10 +95,10 @@ export default function GuessPage() {
     !!game &&
     !!player &&
     game.phase === "guessing" &&
-    otherPlayerIds.length === GUESSES_PER_PLAYER &&
-    Object.keys(guesses).length >= GUESSES_PER_PLAYER &&
+    otherPlayerIds.length === guessesPerPlayer &&
+    Object.keys(guesses).length >= guessesPerPlayer &&
     otherPlayerIds.every((id) => !!guesses[id]) &&
-    new Set(Object.values(guesses)).size === GUESSES_PER_PLAYER;
+    new Set(Object.values(guesses)).size === guessesPerPlayer;
 
   async function onSubmit() {
     if (!user) return;
@@ -106,7 +111,7 @@ export default function GuessPage() {
 
       // Extra client validation: no duplicates.
       const uniq = new Set(Object.values(payload));
-      if (uniq.size !== GUESSES_PER_PLAYER)
+      if (uniq.size !== guessesPerPlayer)
         throw new Error(ar.guessing.uniquePickError);
 
       await submitGuesses({ playerId: user.uid, guesses: payload });
@@ -159,8 +164,8 @@ export default function GuessPage() {
           <div className="stack">
             <Card className="stack">
               <ProgressBar
-                value={GUESSES_PER_PLAYER ? completed / GUESSES_PER_PLAYER : 0}
-                label={ar.guessing.progressLabel(completed, GUESSES_PER_PLAYER)}
+                value={guessesPerPlayer ? completed / guessesPerPlayer : 0}
+                label={ar.guessing.progressLabel(completed, guessesPerPlayer)}
               />
               <div className="muted">
                 {fetching || loading

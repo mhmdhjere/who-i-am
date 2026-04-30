@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebaseAdmin";
 import type { GameDoc, PlayerDoc } from "@/lib/types";
-import { GUESSES_PER_PLAYER, PLAYER_COUNT } from "@/lib/config";
 
 export async function POST(req: Request) {
   const secret = req.headers.get("x-admin-secret") ?? "";
@@ -36,9 +35,15 @@ export async function POST(req: Request) {
 
   // Build answer-owner truth map: each answer-set belongs to the playerId itself.
   const playerIds = players.map((p) => p.id);
-  if (playerIds.length !== PLAYER_COUNT) {
+  const playerCount =
+    typeof game.playerCount === "number" && Number.isFinite(game.playerCount)
+      ? Math.max(2, Math.min(16, Math.round(game.playerCount)))
+      : 16;
+  const guessesPerPlayer = playerCount - 1;
+
+  if (playerIds.length !== playerCount) {
     return NextResponse.json(
-      { error: `Expected ${PLAYER_COUNT} players, found ${playerIds.length}` },
+      { error: `Expected ${playerCount} players, found ${playerIds.length}` },
       { status: 400 }
     );
   }
@@ -52,7 +57,7 @@ export async function POST(req: Request) {
       const guessed = guesses[ownerId];
       if (guessed && guessed === ownerId) correct += 1;
     }
-    if (correct > GUESSES_PER_PLAYER) correct = GUESSES_PER_PLAYER;
+    if (correct > guessesPerPlayer) correct = guessesPerPlayer;
     batch.update(playersRef.doc(p.id), { score: correct });
   }
 
